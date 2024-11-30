@@ -64,7 +64,7 @@ export class BookingService {
         throw new NotFoundException(`Not found package.`);
       }
 
-      const { id } = await tx.booking.create({
+      const { id: bookingId } = await tx.booking.create({
         data: {
           packageId: item.id,
           quantity: body.quantity,
@@ -82,7 +82,7 @@ export class BookingService {
 
       await tx.contact.create({
         data: {
-          bookingId: id,
+          bookingId: bookingId,
           name: contact.name,
           email: contact.email,
           phoneCode: contact.phoneCode,
@@ -92,7 +92,7 @@ export class BookingService {
 
       await tx.participant.createMany({
         data: participants.map((participant) => ({
-          bookingId: id,
+          bookingId: bookingId,
           name: participant.name,
           email: participant.email,
           phoneCode: participant.phoneCode,
@@ -102,7 +102,7 @@ export class BookingService {
         })),
       });
 
-      return { id };
+      return { id: bookingId };
     });
 
     return this.findOne(id);

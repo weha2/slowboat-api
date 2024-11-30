@@ -27,8 +27,8 @@ export class BookingDto {
 
   @ApiProperty()
   @IsNumber()
-  @IsNotEmpty()
-  price: number;
+  @IsOptional()
+  price?: number;
 
   @ApiProperty()
   @IsInt()

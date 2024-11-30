@@ -52,11 +52,23 @@ export class BookingService {
 
   async create(body: BookingDto): Promise<BookingDto> {
     const { id } = await this.prismaService.$transaction(async (tx) => {
+      const item = await tx.package.findUnique({
+        where: { id: body.packageId },
+        select: {
+          id: true,
+          price: true,
+        },
+      });
+
+      if (!item) {
+        throw new NotFoundException(`Not found package.`);
+      }
+
       const { id } = await tx.booking.create({
         data: {
-          packageId: body.packageId,
+          packageId: item.id,
           quantity: body.quantity,
-          price: body.price,
+          price: item.price,
           date: body.date,
           additionalRequest: body.additionalRequest,
           status: PaymentStatus.PENDING,

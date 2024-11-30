@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { PackageModule } from './modules/package/package.module';
+import { BookingModule } from './modules/booking/booking.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { PackageModule } from './modules/package/package.module';
     }),
     PrismaModule,
     PackageModule,
+    BookingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

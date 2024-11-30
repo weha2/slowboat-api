@@ -31,15 +31,17 @@ model Booking {
   date              DateTime
   additionalRequest String?
   status            PaymentStatus
+  statusMessage     String?
+  completedAt       DateTime?
   createdAt         DateTime?     @default(now())
   updatedAt         DateTime?     @updatedAt
-  contact           Contact[]
+  contact           Contact?
   participant       Participant[]
 }
 
 model Contact {
   id          Int       @id @default(autoincrement())
-  bookingId   Int
+  bookingId   Int       @unique
   booking     Booking   @relation(fields: [bookingId], references: [id])
   name        String
   email       String
@@ -57,7 +59,7 @@ model Participant {
   email          String
   phoneCode      String
   numberPhone    String
-  dateOfbirth    DateTime?
+  dateBirth      DateTime?
   passportNumber String
   createdAt      DateTime? @default(now())
   updatedAt      DateTime? @updatedAt

@@ -17,8 +17,8 @@ model Package {
   id        Int       @id @default(autoincrement())
   name      String
   price     Float
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
   booking   Booking[]
 }
 
@@ -28,38 +28,39 @@ model Booking {
   package           Package       @relation(fields: [packageId], references: [id])
   quantity          Int
   price             Float
+  date              DateTime
   additionalRequest String?
   status            PaymentStatus
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  createdAt         DateTime?     @default(now())
+  updatedAt         DateTime?     @updatedAt
   contact           Contact[]
   participant       Participant[]
 }
 
 model Contact {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   bookingId   Int
-  booking     Booking  @relation(fields: [bookingId], references: [id])
+  booking     Booking   @relation(fields: [bookingId], references: [id])
   name        String
   email       String
   phoneCode   String
   numberPhone String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
 }
 
 model Participant {
-  id             Int      @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   bookingId      Int
-  booking        Booking  @relation(fields: [bookingId], references: [id])
+  booking        Booking   @relation(fields: [bookingId], references: [id])
   name           String
   email          String
   phoneCode      String
   numberPhone    String
-  dateOfbirth    DateTime
+  dateOfbirth    DateTime?
   passportNumber String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime? @updatedAt
 }
 
 enum PaymentStatus {

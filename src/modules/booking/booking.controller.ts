@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
@@ -20,7 +21,7 @@ export class BookingController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Find booking' })
   @ApiResponse({ status: HttpStatus.OK, type: BookingDto })
-  async findOne(@Param('id') id: number): Promise<BookingDto> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<BookingDto> {
     return this.bookingService.findOne(id);
   }
 

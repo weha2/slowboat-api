@@ -1,7 +1,7 @@
-import { Package } from '@prisma/client';
+import { Product } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class PackageDto implements Package {
+export class ProductDto implements Product {
   @ApiProperty()
   name: string;
 

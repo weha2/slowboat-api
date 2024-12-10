@@ -34,12 +34,22 @@ export class ParticipantDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  numberPhone: string;
+  phoneNumber: string;
 
   @ApiProperty({ type: Date })
   @IsDate()
   @Type(() => Date)
   dateBirth: Date;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  gender: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  nationality: string;
 
   @ApiProperty()
   @IsString()

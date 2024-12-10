@@ -21,5 +21,5 @@ export class ContactDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  numberPhone: string;
+  phoneNumber: string;
 }

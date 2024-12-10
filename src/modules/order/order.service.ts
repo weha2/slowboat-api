@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { BookingDto } from './dtos/booking.dto';
+import { OrderDto } from './dtos/order.dto';
 import { PaymentStatus } from '@prisma/client';
 
 @Injectable()
-export class BookingService {
+export class OrderService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findOne(id: number): Promise<BookingDto> {
-    const booking = await this.prismaService.booking.findUnique({
+  async findOne(id: number): Promise<OrderDto> {
+    const order = await this.prismaService.order.findUnique({
       where: { id },
       include: {
         contact: true,
@@ -16,44 +16,46 @@ export class BookingService {
       },
     });
 
-    if (!booking) {
+    if (!order) {
       throw new NotFoundException(`Not found booking.`);
     }
 
-    const { contact, participant } = booking;
+    const { contact, participant } = order;
 
     return {
-      bookingId: booking.id,
-      packageId: booking.packageId,
-      price: booking.price,
-      quantity: booking.quantity,
-      date: booking.date,
-      additionalRequest: booking.additionalRequest,
-      status: booking.status,
-      statusMessage: booking.statusMessage || null,
-      completedAt: booking.completedAt || null,
+      orderId: order.id,
+      productId: order.productId,
+      price: order.price,
+      quantity: order.quantity,
+      date: order.date,
+      additionalRequest: order.additionalRequest,
+      status: order.status,
+      statusMessage: order.statusMessage || null,
+      completedAt: order.completedAt || null,
       contact: {
         name: contact.name,
         email: contact.email,
         phoneCode: contact.phoneCode,
-        numberPhone: contact.numberPhone,
+        phoneNumber: contact.phoneNumber,
       },
       participants: participant.flatMap((participant) => ({
         id: participant.id,
         name: participant.name,
         email: participant.email,
         phoneCode: participant.phoneCode,
-        numberPhone: participant.numberPhone,
+        phoneNumber: participant.phoneNumber,
+        gender: participant.gender,
         dateBirth: participant.dateBirth,
         passportNumber: participant.passportNumber,
+        nationality: participant.nationality,
       })),
     };
   }
 
-  async create(body: BookingDto): Promise<BookingDto> {
+  async create(body: OrderDto): Promise<OrderDto> {
     const { id } = await this.prismaService.$transaction(async (tx) => {
-      const item = await tx.package.findUnique({
-        where: { id: body.packageId },
+      const item = await tx.product.findUnique({
+        where: { id: body.productId },
         select: {
           id: true,
           price: true,
@@ -64,9 +66,9 @@ export class BookingService {
         throw new NotFoundException(`Not found package.`);
       }
 
-      const { id: bookingId } = await tx.booking.create({
+      const { id: orderId } = await tx.order.create({
         data: {
-          packageId: item.id,
+          productId: item.id,
           quantity: body.quantity,
           price: item.price,
           date: body.date,
@@ -82,27 +84,29 @@ export class BookingService {
 
       await tx.contact.create({
         data: {
-          bookingId: bookingId,
+          orderId: orderId,
           name: contact.name,
           email: contact.email,
           phoneCode: contact.phoneCode,
-          numberPhone: contact.numberPhone,
+          phoneNumber: contact.phoneNumber,
         },
       });
 
       await tx.participant.createMany({
         data: participants.map((participant) => ({
-          bookingId: bookingId,
+          orderId: orderId,
           name: participant.name,
           email: participant.email,
           phoneCode: participant.phoneCode,
-          numberPhone: participant.numberPhone,
+          phoneNumber: participant.phoneNumber,
           dateBirth: participant.dateBirth,
+          gender: participant.gender,
           passportNumber: participant.passportNumber,
+          nationality: participant.nationality,
         })),
       });
 
-      return { id: bookingId };
+      return { id: orderId };
     });
 
     return this.findOne(id);

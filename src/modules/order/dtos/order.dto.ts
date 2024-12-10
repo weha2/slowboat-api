@@ -14,16 +14,16 @@ import { ContactDto } from './contact.dto';
 import { ParticipantDto } from './participant.dto';
 import { PaymentStatus } from '@prisma/client';
 
-export class BookingDto {
+export class OrderDto {
   @ApiProperty()
   @IsInt()
   @IsOptional()
-  bookingId?: number;
+  orderId?: number;
 
   @ApiProperty()
   @IsInt()
   @IsNotEmpty()
-  packageId: number;
+  productId: number;
 
   @ApiProperty()
   @IsNumber()

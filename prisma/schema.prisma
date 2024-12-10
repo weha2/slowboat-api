@@ -13,19 +13,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Package {
+model Product {
   id        Int       @id @default(autoincrement())
   name      String
   price     Float
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
-  booking   Booking[]
+  order     Order[]
 }
 
-model Booking {
+model Order {
   id                Int           @id @default(autoincrement())
-  packageId         Int
-  package           Package       @relation(fields: [packageId], references: [id])
+  productId         Int
+  product           Product       @relation(fields: [productId], references: [id])
   quantity          Int
   price             Float
   date              DateTime
@@ -41,25 +41,27 @@ model Booking {
 
 model Contact {
   id          Int       @id @default(autoincrement())
-  bookingId   Int       @unique
-  booking     Booking   @relation(fields: [bookingId], references: [id])
+  orderId     Int       @unique
+  order       Order     @relation(fields: [orderId], references: [id])
   name        String
   email       String
   phoneCode   String
-  numberPhone String
+  phoneNumber String
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
 }
 
 model Participant {
   id             Int       @id @default(autoincrement())
-  bookingId      Int
-  booking        Booking   @relation(fields: [bookingId], references: [id])
+  orderId        Int       @unique
+  order          Order     @relation(fields: [orderId], references: [id])
   name           String
   email          String
   phoneCode      String
-  numberPhone    String
+  phoneNumber    String
   dateBirth      DateTime?
+  gender         String
+  nationality    String
   passportNumber String
   createdAt      DateTime? @default(now())
   updatedAt      DateTime? @updatedAt

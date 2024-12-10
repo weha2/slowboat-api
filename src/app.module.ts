@@ -3,8 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
-import { PackageModule } from './modules/package/package.module';
-import { BookingModule } from './modules/booking/booking.module';
+import { ProductModule } from './modules/product/product.module';
+import { OrderModule } from './modules/order/order.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 
@@ -21,8 +21,8 @@ import { APP_GUARD } from '@nestjs/core';
       },
     ]),
     PrismaModule,
-    PackageModule,
-    BookingModule,
+    ProductModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [

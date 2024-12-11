@@ -33,14 +33,16 @@ export class OrderService {
       statusMessage: order.statusMessage || null,
       completedAt: order.completedAt || null,
       contact: {
-        name: contact.name,
+        lastname: contact.lastname,
+        firstname: contact.firstname,
         email: contact.email,
         phoneCode: contact.phoneCode,
         phoneNumber: contact.phoneNumber,
       },
       participants: participant.flatMap((participant) => ({
         id: participant.id,
-        name: participant.name,
+        lastname: participant.lastname,
+        firstname: participant.firstname,
         email: participant.email,
         phoneCode: participant.phoneCode,
         phoneNumber: participant.phoneNumber,
@@ -85,7 +87,8 @@ export class OrderService {
       await tx.contact.create({
         data: {
           orderId: orderId,
-          name: contact.name,
+          lastname: contact.lastname,
+          firstname: contact.firstname,
           email: contact.email,
           phoneCode: contact.phoneCode,
           phoneNumber: contact.phoneNumber,
@@ -93,17 +96,22 @@ export class OrderService {
       });
 
       await tx.participant.createMany({
-        data: participants.map((participant) => ({
-          orderId: orderId,
-          name: participant.name,
-          email: participant.email,
-          phoneCode: participant.phoneCode,
-          phoneNumber: participant.phoneNumber,
-          dateBirth: participant.dateBirth,
-          gender: participant.gender,
-          passportNumber: participant.passportNumber,
-          nationality: participant.nationality,
-        })),
+        data: participants.map((participant) => {
+          return {
+            orderId: orderId,
+            lastname: participant.lastname,
+            firstname: participant.firstname,
+            email: participant.email,
+            phoneCode: participant.phoneCode,
+            phoneNumber: participant.phoneNumber,
+            gender: participant.gender,
+            passportNumber: participant.passportNumber,
+            nationality: participant.nationality,
+            ...(participant.dateBirth && {
+              dateBirth: participant.dateBirth,
+            }),
+          };
+        }),
       });
 
       return { id: orderId };

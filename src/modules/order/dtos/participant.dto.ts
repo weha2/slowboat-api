@@ -18,7 +18,12 @@ export class ParticipantDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  name: string;
+  lastname: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  firstname: string;
 
   @ApiProperty()
   @IsString()

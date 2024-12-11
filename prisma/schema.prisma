@@ -43,7 +43,8 @@ model Contact {
   id          Int       @id @default(autoincrement())
   orderId     Int       @unique
   order       Order     @relation(fields: [orderId], references: [id])
-  name        String
+  lastname    String
+  firstname   String
   email       String
   phoneCode   String
   phoneNumber String
@@ -55,14 +56,15 @@ model Participant {
   id             Int       @id @default(autoincrement())
   orderId        Int       @unique
   order          Order     @relation(fields: [orderId], references: [id])
-  name           String
-  email          String
-  phoneCode      String
-  phoneNumber    String
+  lastname       String
+  firstname      String
+  email          String?
+  phoneCode      String?
+  phoneNumber    String?
   dateBirth      DateTime?
-  gender         String
-  nationality    String
-  passportNumber String
+  gender         String?
+  nationality    String?
+  passportNumber String?
   createdAt      DateTime? @default(now())
   updatedAt      DateTime? @updatedAt
 }

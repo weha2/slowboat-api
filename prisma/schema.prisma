@@ -13,9 +13,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Gender {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  createdAt   DateTime?     @default(now())
+  updatedAt   DateTime?     @updatedAt
+  participant Participant[]
+}
+
+model CountryCode {
+  id          Int           @id @default(autoincrement())
+  name        String
+  dialCode    String        @unique
+  code        String
+  createdAt   DateTime?     @default(now())
+  updatedAt   DateTime?     @updatedAt
+  contact     Contact[]
+  participant Participant[]
+}
+
+model CountryNationality {
+  id          Int           @id @default(autoincrement())
+  numCode     String
+  alpha2Code  String
+  alpha3Code  String
+  enShortName String
+  nationality String
+  createdAt   DateTime?     @default(now())
+  updatedAt   DateTime?     @updatedAt
+  participant Participant[]
+}
+
 model Product {
   id        Int       @id @default(autoincrement())
-  name      String
+  name      String    @unique
   price     Float
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -30,6 +61,7 @@ model Order {
   price             Float
   date              DateTime
   additionalRequest String?
+  location          String?
   status            PaymentStatus
   statusMessage     String?
   completedAt       DateTime?
@@ -40,33 +72,37 @@ model Order {
 }
 
 model Contact {
-  id          Int       @id @default(autoincrement())
-  orderId     Int       @unique
-  order       Order     @relation(fields: [orderId], references: [id])
-  lastname    String
-  firstname   String
-  email       String
-  phoneCode   String
-  phoneNumber String
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @updatedAt
+  id            Int         @id @default(autoincrement())
+  orderId       Int         @unique
+  order         Order       @relation(fields: [orderId], references: [id])
+  lastname      String
+  firstname     String
+  email         String
+  countryCodeId Int
+  countryCode   CountryCode @relation(fields: [countryCodeId], references: [id])
+  phoneNumber   String
+  createdAt     DateTime?   @default(now())
+  updatedAt     DateTime?   @updatedAt
 }
 
 model Participant {
-  id             Int       @id @default(autoincrement())
-  orderId        Int       @unique
-  order          Order     @relation(fields: [orderId], references: [id])
-  lastname       String
-  firstname      String
-  email          String?
-  phoneCode      String?
-  phoneNumber    String?
-  dateBirth      DateTime?
-  gender         String?
-  nationality    String?
-  passportNumber String?
-  createdAt      DateTime? @default(now())
-  updatedAt      DateTime? @updatedAt
+  id                   Int                 @id @default(autoincrement())
+  orderId              Int                 @unique
+  order                Order               @relation(fields: [orderId], references: [id])
+  lastname             String
+  firstname            String
+  email                String?
+  countryCodeId        Int?
+  countryCode          CountryCode?        @relation(fields: [countryCodeId], references: [id])
+  phoneNumber          String?
+  dateBirth            DateTime?
+  genderId             Int?
+  gender               Gender?             @relation(fields: [genderId], references: [id])
+  countryNationalityId Int?
+  countryNationality   CountryNationality? @relation(fields: [countryNationalityId], references: [id])
+  passportNumber       String?
+  createdAt            DateTime?           @default(now())
+  updatedAt            DateTime?           @updatedAt
 }
 
 enum PaymentStatus {

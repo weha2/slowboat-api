@@ -4,6 +4,7 @@ import {
   IsEmail,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -32,9 +33,14 @@ export class ParticipantDto {
   email: string;
 
   @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
+  countryCodeId: number;
+
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  phoneCode: string;
+  countryCodeName: string;
 
   @ApiProperty()
   @IsString()
@@ -47,14 +53,24 @@ export class ParticipantDto {
   dateBirth: Date;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  gender: string;
+  genderId: number;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  nationality: string;
+  genderName: string;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
+  countryNationalityId: number;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  countryNationalityName: string;
 
   @ApiProperty()
   @IsString()

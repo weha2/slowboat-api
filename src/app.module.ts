@@ -7,6 +7,9 @@ import { ProductModule } from './modules/product/product.module';
 import { OrderModule } from './modules/order/order.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { CountryCodeModule } from './modules/country-code/country-code.module';
+import { CountryNationalityModule } from './modules/country-nationality/country-nationality.module';
+import { GenderModule } from './modules/gender/gender.module';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { APP_GUARD } from '@nestjs/core';
     PrismaModule,
     ProductModule,
     OrderModule,
+    CountryCodeModule,
+    CountryNationalityModule,
+    GenderModule,
   ],
   controllers: [AppController],
   providers: [

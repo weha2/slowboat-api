@@ -4,25 +4,40 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    const count = await prisma.product.count();
-    if (!count) {
-      await prisma.product.createMany({
-        data: [
-          {
-            name: '⛵Slowboat',
-            price: 1700,
-          },
-          {
-            name: '🚃Bus',
-            price: 1600,
-          },
-          {
-            name: '🚝Train',
-            price: 1990,
-          },
-        ],
-      });
-    }
+    await prisma.product.createMany({
+      data: [
+        {
+          name: '⛵Slowboat',
+          price: 1700,
+        },
+        {
+          name: '🚃Bus',
+          price: 1600,
+        },
+        {
+          name: '🚝Train',
+          price: 1990,
+        },
+      ],
+    });
+  } catch (error) {
+    console.error(error);
+  }
+
+  try {
+    await prisma.gender.createMany({
+      data: [
+        {
+          name: 'Male',
+        },
+        {
+          name: 'Female',
+        },
+        {
+          name: 'Other',
+        },
+      ],
+    });
   } catch (error) {
     console.error(error);
   }

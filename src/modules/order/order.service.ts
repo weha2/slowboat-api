@@ -12,7 +12,13 @@ export class OrderService {
       where: { id },
       include: {
         contact: true,
-        participant: true,
+        participant: {
+          include: {
+            countryCode: true,
+            countryNationality: true,
+            gender: true,
+          },
+        },
       },
     });
 
@@ -36,7 +42,7 @@ export class OrderService {
         lastname: contact.lastname,
         firstname: contact.firstname,
         email: contact.email,
-        phoneCode: contact.phoneCode,
+        countryCodeId: contact.countryCodeId,
         phoneNumber: contact.phoneNumber,
       },
       participants: participant.flatMap((participant) => ({
@@ -44,12 +50,15 @@ export class OrderService {
         lastname: participant.lastname,
         firstname: participant.firstname,
         email: participant.email,
-        phoneCode: participant.phoneCode,
+        countryCodeId: participant?.countryCodeId,
+        countryCodeName: participant?.countryCode?.name,
         phoneNumber: participant.phoneNumber,
-        gender: participant.gender,
+        genderId: participant.gender?.id,
+        genderName: participant.gender?.name,
         dateBirth: participant.dateBirth,
         passportNumber: participant.passportNumber,
-        nationality: participant.nationality,
+        countryNationalityId: participant?.countryNationalityId,
+        countryNationalityName: participant.countryNationality?.enShortName,
       })),
     };
   }
@@ -90,7 +99,7 @@ export class OrderService {
           lastname: contact.lastname,
           firstname: contact.firstname,
           email: contact.email,
-          phoneCode: contact.phoneCode,
+          countryCodeId: contact.countryCodeId,
           phoneNumber: contact.phoneNumber,
         },
       });
@@ -102,11 +111,11 @@ export class OrderService {
             lastname: participant.lastname,
             firstname: participant.firstname,
             email: participant.email,
-            phoneCode: participant.phoneCode,
+            countryCodeId: participant.countryCodeId,
             phoneNumber: participant.phoneNumber,
-            gender: participant.gender,
+            genderId: participant.genderId,
             passportNumber: participant.passportNumber,
-            nationality: participant.nationality,
+            countryNationalityId: participant.countryNationalityId,
             ...(participant.dateBirth && {
               dateBirth: participant.dateBirth,
             }),

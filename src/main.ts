@@ -24,7 +24,10 @@ async function bootstrap() {
   });
 
   app.use(helmet());
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:3000', 'https://www.slowboat-laos.com'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  });
 
   const PORT = process.env.APP_PORT ?? 3000;
 

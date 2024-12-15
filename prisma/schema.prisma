@@ -61,7 +61,7 @@ model Order {
   price             Float
   date              DateTime
   additionalRequest String?
-  location          String?
+  pickupLocation    String?
   status            PaymentStatus
   statusMessage     String?
   completedAt       DateTime?

@@ -43,6 +43,11 @@ export class OrderDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
+  pickupLocation?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
   additionalRequest?: string;
 
   @ApiProperty({ enum: PaymentStatus, default: PaymentStatus.PENDING })

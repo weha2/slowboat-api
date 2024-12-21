@@ -16,6 +16,11 @@ import { PaymentStatus } from '@prisma/client';
 
 export class OrderDto {
   @ApiProperty()
+  @IsString()
+  @IsOptional()
+  invoiceNumber?: string;
+
+  @ApiProperty()
   @IsInt()
   @IsOptional()
   orderId?: number;

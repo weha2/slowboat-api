@@ -2,10 +2,43 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OrderDto } from './dtos/order.dto';
 import { PaymentStatus } from '@prisma/client';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class OrderService {
   constructor(private readonly prismaService: PrismaService) {}
+
+  private generateHash(): string {
+    return crypto.randomBytes(4).toString('hex').toUpperCase();
+  }
+
+  async getNextInvoiceNumber(): Promise<string> {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const prefix = `${year}${month}`;
+
+    const lastInvoice = await this.prismaService.order.findFirst({
+      where: {
+        invoiceNumber: {
+          contains: `-${prefix}-`,
+        },
+      },
+      orderBy: {
+        invoiceNumber: 'desc',
+      },
+    });
+
+    let newNumber: number;
+    if (lastInvoice) {
+      const lastNumber = parseInt(lastInvoice.invoiceNumber.slice(-4));
+      newNumber = lastNumber + 1;
+    } else {
+      newNumber = 1;
+    }
+
+    return `${this.generateHash()}-${prefix}-${String(newNumber).padStart(4, '0')}`;
+  }
 
   async findOne(id: number): Promise<OrderDto> {
     const order = await this.prismaService.order.findUnique({
@@ -29,6 +62,7 @@ export class OrderService {
     const { contact, participant } = order;
 
     return {
+      invoiceNumber: order.invoiceNumber,
       orderId: order.id,
       productId: order.productId,
       price: order.price,
@@ -64,8 +98,8 @@ export class OrderService {
     };
   }
 
-  async create(body: OrderDto): Promise<OrderDto> {
-    const { id } = await this.prismaService.$transaction(async (tx) => {
+  async create(body: OrderDto): Promise<any> {
+    return this.prismaService.$transaction(async (tx) => {
       const item = await tx.product.findUnique({
         where: { id: body.productId },
         select: {
@@ -78,10 +112,14 @@ export class OrderService {
         throw new NotFoundException(`Not found package.`);
       }
 
+      const invoiceNumber = await this.getNextInvoiceNumber();
+      const quantity = body.participants.length;
+
       const { id: orderId } = await tx.order.create({
         data: {
+          invoiceNumber: invoiceNumber,
           productId: item.id,
-          quantity: body.quantity,
+          quantity: quantity,
           price: item.price,
           date: body.date,
           pickupLocation: body.pickupLocation,
@@ -125,9 +163,15 @@ export class OrderService {
         }),
       });
 
-      return { id: orderId };
-    });
+      const amount = item.price * quantity * 100;
 
-    return this.findOne(id);
+      return {
+        invoiceNumber: invoiceNumber,
+        defaultPaymentMethod: 'credit_card',
+        frameLabel: 'Slowboat Laos',
+        amount: amount,
+        currency: 'thb',
+      };
+    });
   }
 }

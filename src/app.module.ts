@@ -10,6 +10,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { CountryCodeModule } from './modules/country-code/country-code.module';
 import { CountryNationalityModule } from './modules/country-nationality/country-nationality.module';
 import { GenderModule } from './modules/gender/gender.module';
+import { PaymentModule } from './modules/payment/payment.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -23,12 +27,37 @@ import { GenderModule } from './modules/gender/gender.module';
         limit: 100,
       },
     ]),
+    MailerModule.forRootAsync({
+      useFactory: async () => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false, // true for 465, false for other ports
+          auth: {
+            user: process.env.EMAIL_USER, // Gmail address
+            pass: process.env.EMAIL_PASSWORD, // App password จาก Google Account
+          },
+        },
+        defaults: {
+          from: `"No Reply" <${process.env.EMAIL_USER}>`,
+        },
+        template: {
+          dir: './templates',
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
+    }),
+    EventEmitterModule.forRoot(),
     PrismaModule,
     ProductModule,
     OrderModule,
     CountryCodeModule,
     CountryNationalityModule,
     GenderModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [

@@ -26,7 +26,12 @@ async function bootstrap() {
 
   app.use(helmet());
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://www.slowboat-laos.com'],
+    origin: [
+      'http://localhost:3000',
+      'https://www.slowboat-laos.com',
+      'https://slowboat-laos.com',
+      'https://api.slowboat-laos.com',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
   });
 

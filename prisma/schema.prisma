@@ -45,11 +45,12 @@ model CountryNationality {
 }
 
 model Product {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
+  id        Int          @id @default(autoincrement())
+  name      String       @unique
   price     Float
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  type      PackageType?
+  createdAt DateTime?    @default(now())
+  updatedAt DateTime?    @updatedAt
   order     Order[]
 }
 
@@ -105,6 +106,12 @@ model Participant {
   passportNumber       String?
   createdAt            DateTime?           @default(now())
   updatedAt            DateTime?           @updatedAt
+}
+
+enum PackageType {
+  SLOWBOAT
+  TRAIN
+  BUS
 }
 
 enum PaymentStatus {

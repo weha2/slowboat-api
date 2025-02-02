@@ -18,7 +18,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CountryCodeDto } from './dtos/country-code.dto';
 
-@ApiTags('CountryCode')
+@ApiTags('Country Code')
 @Controller('country-codes')
 export class CountryCodeController {
   constructor(private readonly countryCodeService: CountryCodeService) {}

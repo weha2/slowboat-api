@@ -18,7 +18,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CountryNationalityDto } from './dtos/country-nationality.dto';
 
-@ApiTags('CountryNationality')
+@ApiTags('Country Nationality')
 @Controller('country-nationalities')
 export class CountryNationalityController {
   constructor(
